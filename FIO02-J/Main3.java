@@ -13,12 +13,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 
-public class Main
+public class Main3
 {
-    static String SHAPE_OF_YOU = "C:\\Users\\ajrose6\\Aaron_Code\\FIO02-J\\Ed Sheeran Shape of You (Lyrics).wav";
-    static String UPTOWN_FUNK = "C:\\Users\\ajrose6\\Aaron_Code\\FIO02-J\\Mark Ronson - Uptown Funk (Lyrics) ft. Bruno Mars.wav";
-    static String CANTFEELMYFACE = "C:\\Users\\ajrose6\\Aaron_Code\\FIO02-J\\The Weeknd - Cant Feel My Face (Official Audio).wav";
-    static String FIREWORK = "C:\\Users\\ajrose6\\Aaron_Code\\FIO02-J\\Katy Perry - Firework (Lyrics).mp3"; // .mp3 file, won't work
+    static String SHAPE_OF_YOU = "Ed Sheeran Shape of You (Lyrics).wav";
+    static String UPTOWN_FUNK = "Mark Ronson - Uptown Funk (Lyrics) ft. Bruno Mars.wav";
+    static String CANTFEELMYFACE = "The Weeknd - Cant Feel My Face (Official Audio).wav";
+    static String FIREWORK = "Katy Perry - Firework (Lyrics).mp3"; // .mp3 file, won't work
     static String ROLLINGINTHEDEEP;
 
     Clip clip; //clip used to play music
@@ -36,13 +36,15 @@ public class Main
     public static void main(String [] args)
     {
 
-        Main m = new Main();
+        Main3 m = new Main3();
 
         boolean continueListening = true; //when false the program ends
 
         int choice = 0; //option the user chooses
 
         Scanner scan = new Scanner(System.in); //get input from user
+
+        System.out.println(new File(SHAPE_OF_YOU).getAbsolutePath());
 
         System.out.println("Hello, welcome to the song o' matic 2000. Choose a song from the list to play! ");
 
