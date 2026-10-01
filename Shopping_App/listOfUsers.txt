@@ -1,0 +1,5 @@
+Aaron, {userID}, 123 Fake Street Normal IL
+Brady, {userID}, 456 Another Street Normal IL
+Nathan, {userID}, 023 Birch Avenue Normal IL
+Johnny, {userID}, 432 Water Way Normal IL
+Andrew, {userID}, 595 Purple Place Normal IL
