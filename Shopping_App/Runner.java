@@ -75,6 +75,8 @@ public class Runner {
     
     public static void main(String[] args) {
             
+        Controller.createTables(); //create the database tables, if not already created
+        
         String input  = ""; //choice user selects for the switch statement
         
         listOfUsers = new File("listOfUsers.txt"); //open the text file containing the users

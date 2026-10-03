@@ -1,0 +1,9 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Shopping_App/lib/slf4j-api-2.0.19-javadoc.jar",
+        "Shopping_App/lib/sqlite-jdbc-3.53.4.0-javadoc.jar",
+        "Shopping_App/lib/sqlite-jdbc-3.53.4.0.jar",
+        "Shopping_App/lib/slf4j-api-2.0.19.jar"
+    ]
+}
