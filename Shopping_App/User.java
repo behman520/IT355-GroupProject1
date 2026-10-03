@@ -39,7 +39,4 @@ public class User
     {
         return this.username;
     }
-
-
-
 }
