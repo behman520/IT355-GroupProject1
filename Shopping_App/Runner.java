@@ -1,35 +1,47 @@
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.FileWriter; //for writing to the list of user's file
 
 public class Runner {
 
-    static ArrayList<User> currentUsers; //a list of the current users using the system
+    static File listOfUsers; //this represents the text file containing users
     static Scanner scan = new Scanner(System.in);
     
-    public static User login()
+    public static User Account(File f) //sign in or log in the user
     {
- 
         String enteredNumber; //the number the users enters in. Representing as a string because nextInt sucks
-        String usersName = ""; //represents the user's entered name
-         
+        String usersName = ""; //represents the user's entered name (not username)
+
         System.out.println("Hello. Press 1 to login and press 2 to create an account, then press 'Enter' key");
 
         enteredNumber = scan.nextLine();
 
-        if(enteredNumber.equals("1"))
+        if(enteredNumber.equals("1")) //login
         {
             System.out.print("What is your name: ");
             usersName = scan.nextLine();
 
-            for(User u : currentUsers)
+            //log in the user by their first name. obviously not secure at all, if we have time a backend sql server would be nice 
+            try(Scanner fileReader = new Scanner(f))
             {
-                if (u.getName().equals(usersName))
+                String line = ""; // a line in the file
+
+                while(fileReader.hasNextLine())
                 {
-                    return u;
+                    line = fileReader.nextLine();
+
+                   
                 }
             }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Couldn't find list of users, exiting.");
+                System.exit(0);
+            }
+
         }
-        else if(enteredNumber.equals("2"))
+        else if(enteredNumber.equals("2")) //create an account
         {
             String usersAddress = "";           
 
@@ -40,7 +52,8 @@ public class Runner {
             usersAddress =  scan.nextLine();
 
             User newUser = new User(usersName, usersAddress);
-            currentUsers.add(newUser);
+             
+            //add user to the list
 
             return newUser;
              
@@ -61,12 +74,13 @@ public class Runner {
     }
     
     public static void main(String[] args) {
-           
-        currentUsers = new ArrayList<>();
-
-        String input  = ""; //choice user selects
+            
+        String input  = ""; //choice user selects for the switch statement
         
-        User currentUser = login(); //get the user using the system.
+        listOfUsers = new File("listOfUsers.txt"); //open the text file containing the users
+
+        User currentUser = Account(listOfUsers); //get the user using the system. Pass the list of users file to the function
+
         menu(currentUser.getName());
 
         input = scan.nextLine(); //get the first user input
