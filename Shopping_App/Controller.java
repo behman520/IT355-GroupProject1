@@ -67,7 +67,6 @@ public class Controller {
     {
         String name = u.getName();
         String username = u.getUsername();
-        System.out.println("username: " +username);
         String address = u.getAddress();
 
         String sql ="INSERT INTO users (name, username, address, password) VALUES (?,?,?,?)";

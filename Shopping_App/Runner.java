@@ -9,22 +9,28 @@ public class Runner {
     {
         System.out.println("\nHello " + name + ", what would you like to do?");
         System.out.println("(A) Browse item selection\n(B) View shopping cart\n(C) Preview current and past orders\n(D) View payment methods\n(E) Exit application");
+        System.out.print("Enter selection: ");
     }
     
     public static void main(String[] args) {
             
         Controller.createTables(); //create the database tables, if not already created
-
         
-        userSignIn(); //sign the user in or have them create an account
-    
+        User signedInUser = userSignIn(); //sign the user in or have them create an account
+        
+        while(signedInUser == null)
+        {
+            System.out.println("Sign in/log in failed, please try again");
+            signedInUser = userSignIn(); //sign the user in or have them create an account
+        }
 
         String input  = ""; //choice user selects for the switch statement
-
-        while(!input.toUpperCase().equals("E"))
+    
+        menu(signedInUser.getName()); //prompt the user with the first menu
+        input = scan.nextLine();
+        
+        while(!input.toUpperCase().equals("E")) //continue looping until the user wants to quit (Enters 'E')
         {
-            System.out.println(input);
-
             switch(input)
             {
                 case "A":
@@ -55,11 +61,12 @@ public class Runner {
                 break;
             }
 
+            menu(signedInUser.getName());
             input = scan.nextLine(); //get next thing to do
         }
     }
 
-    public static void userSignIn()
+    public static User userSignIn()
     {
         System.out.print("Welcome! Enter 'sign up' or 'log in' to continue: ");
 
@@ -108,13 +115,21 @@ public class Runner {
 
             User newUser = new User(name, username, address);
 
-            Controller.addUser(newUser, password);
+            boolean userAdded = Controller.addUser(newUser, password);
+
+            if(userAdded == false) //set the new user to null if the database couldn't add the user
+            {
+                newUser = null;
+            }
+            
+            return newUser;
             
 
         } 
         else
         {
             System.out.println("Hey i know you"); //deal with log in
+            return null;
         }
     }
 }
