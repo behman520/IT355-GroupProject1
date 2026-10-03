@@ -4,6 +4,8 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -24,7 +26,9 @@ public class Controller {
         String users = """
                 CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
                 username TEXT NOT NULL UNIQUE,
+                address TEXT NOT NULL,
                 password TEXT NOT NULL
                 )""";
         
@@ -58,6 +62,48 @@ public class Controller {
         }
     }
 
-    
+    //add a user to the database
+    public static boolean addUser(User u, String password)
+    {
+        String name = u.getName();
+        String username = u.getUsername();
+        System.out.println("username: " +username);
+        String address = u.getAddress();
 
+        String sql ="INSERT INTO users (name, username, address, password) VALUES (?,?,?,?)";
+        
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) //adding the user to the database
+        {
+            ps.setString(1, name);
+            ps.setString(2, username);
+            ps.setString(3, address);
+            ps.setString(4, password);
+            ps.executeUpdate();
+            return true;
+        }
+        catch(SQLException e) //couldn't add user for some reason
+        {
+            System.out.println("Could not add user: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //checks if a username already exists
+    public static boolean userExists(String u)
+    {
+        String usernameCheck = "SELECT 1 FROM users WHERE username = ?";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(usernameCheck)){
+        ps.setString(1, u);
+            try(ResultSet rs = ps.executeQuery())
+            {
+                return rs.next();
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

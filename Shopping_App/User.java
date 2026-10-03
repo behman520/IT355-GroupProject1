@@ -5,14 +5,15 @@
 public class User
 {
     private String name; //the persons name (just first name, to keep more information private)
-    private String userID; //this is the users id. This is not shown to the user, but is used when pulling from the database
+    private String username; //this is the users id. This is not shown to the user, but is used when pulling from the database
     private String address; //this is the users address that they selected
     private ShoppingCart cart; //the users shopping cart
     private Orders orders; //users past and present orders
 
-    User(String n, String a)
+    User(String nme, String uname, String a)
     {
-        this.name = n;
+        this.name = nme;
+        this.username = uname;
         this.address = a;
     }
 
@@ -34,6 +35,11 @@ public class User
     public void setAddress(String a)
     {
         this.address = a;
+    }
+
+    public String getUsername()
+    {
+        return this.username;
     }
 
 

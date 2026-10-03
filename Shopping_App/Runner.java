@@ -1,72 +1,10 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.io.FileWriter; //for writing to the list of user's file
-
+ 
 public class Runner {
 
-    static File listOfUsers; //this represents the text file containing users
     static Scanner scan = new Scanner(System.in);
     
-    public static User Account(File f) //sign in or log in the user
-    {
-        String enteredNumber; //the number the users enters in. Representing as a string because nextInt sucks
-        String usersName = ""; //represents the user's entered name (not username)
-
-        System.out.println("Hello. Press 1 to login and press 2 to create an account, then press 'Enter' key");
-
-        enteredNumber = scan.nextLine();
-
-        if(enteredNumber.equals("1")) //login
-        {
-            System.out.print("What is your name: ");
-            usersName = scan.nextLine();
-
-            //log in the user by their first name. obviously not secure at all, if we have time a backend sql server would be nice 
-            try(Scanner fileReader = new Scanner(f))
-            {
-                String line = ""; // a line in the file
-
-                while(fileReader.hasNextLine())
-                {
-                    line = fileReader.nextLine();
-
-                   
-                }
-            }
-            catch(FileNotFoundException e)
-            {
-                System.out.println("Couldn't find list of users, exiting.");
-                System.exit(0);
-            }
-
-        }
-        else if(enteredNumber.equals("2")) //create an account
-        {
-            String usersAddress = "";           
-
-            System.out.print("Enter name: ");
-            usersName = scan.nextLine();
-
-            System.out.print("Enter address: ");
-            usersAddress =  scan.nextLine();
-
-            User newUser = new User(usersName, usersAddress);
-             
-            //add user to the list
-
-            return newUser;
-             
-        }
-        else
-        {
-            System.out.println("You did not enter 1 or 2, exiting application, try again.");
-            System.exit(0);
-        }
-
-        return null; //never hits
-    }
-
+    //the main menu for the app
     public static void menu(String name)
     {
         System.out.println("\nHello " + name + ", what would you like to do?");
@@ -76,16 +14,12 @@ public class Runner {
     public static void main(String[] args) {
             
         Controller.createTables(); //create the database tables, if not already created
+
         
+        userSignIn(); //sign the user in or have them create an account
+    
+
         String input  = ""; //choice user selects for the switch statement
-        
-        listOfUsers = new File("listOfUsers.txt"); //open the text file containing the users
-
-        User currentUser = Account(listOfUsers); //get the user using the system. Pass the list of users file to the function
-
-        menu(currentUser.getName());
-
-        input = scan.nextLine(); //get the first user input
 
         while(!input.toUpperCase().equals("E"))
         {
@@ -96,8 +30,7 @@ public class Runner {
                 case "A":
                 case "a":
 
-                browseItemSelection(currentUser);
-
+                
                 break;
 
                 case "B":
@@ -124,12 +57,64 @@ public class Runner {
 
             input = scan.nextLine(); //get next thing to do
         }
-
     }
 
-    public static void browseItemSelection(User u)
+    public static void userSignIn()
     {
+        System.out.print("Welcome! Enter 'sign up' or 'log in' to continue: ");
 
+        String choice = scan.nextLine();
+        choice = choice.toLowerCase();
+
+        //user didn't enter 'sign up' or 'log in', keep prompting them for it
+        while(!(choice.equals("sign up") || choice.equals("log in")))
+        {
+            System.out.print("Please enter key phrase 'sign up' or 'log in' to continue: ");
+            choice = scan.nextLine();
+            choice = choice.toLowerCase();
+
+        }
+
+        if(choice.equals("sign up")) //deal with sign up
+        {
+            String name;
+            String username;
+            String address;
+            String password;
+
+            System.out.print("Enter your first name or press enter to skip: "); //ask for a username
+            name = scan.nextLine();
+
+            System.out.print("Enter a username: "); //ask for a username
+            username = scan.nextLine();
+
+            //check if that username already exists
+            boolean exists = Controller.userExists(username);
+
+            while(exists)
+            {
+                System.out.print("Please choose a different username: "); //ask for a username
+                username = scan.nextLine();
+
+                //check if that username already exists
+                exists = Controller.userExists(username);
+            }
+
+            System.out.print("Enter an address: "); //ask for a username
+            address = scan.nextLine();
+
+            System.out.print("Enter an password: "); //ask for a username
+            password = scan.nextLine();
+
+            User newUser = new User(name, username, address);
+
+            Controller.addUser(newUser, password);
+            
+
+        } 
+        else
+        {
+            System.out.println("Hey i know you"); //deal with log in
+        }
     }
-
 }
