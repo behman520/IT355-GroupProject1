@@ -19,6 +19,7 @@ public class Runner {
     public static void main(String[] args) {
 
         Controller.createTables(); // create the database tables, if not already created
+        Controller.addItems(); //creates the items in the Items table, if not already created
 
         User signedInUser = userSignIn(); // sign the user in or have them create an account
 
@@ -39,14 +40,16 @@ public class Runner {
                 case "A":
                 case "a":
 
-                    break;
+                    browseItemSelection(signedInUser); //allow the user to browse items on the site and add items to their shopping cart
+
+                break;
 
                 case "B":
                 case "b":
 
-                    // viewShoppingCart(currentUser);
+                    //viewShoppingCart(signedInUser); //lets the user see whats in their shopping cart
 
-                    break;
+                break;
 
                 case "C":
                 case "c":
@@ -161,5 +164,9 @@ public class Runner {
             return signedInUser;
 
         }
+    }
+ 
+    public static void browseItemSelection(User signedInUser){ //allows a signed in user to browse items and add to shopping cart
+        //Controller.displayListOfItems();
     }
 }

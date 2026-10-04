@@ -1,12 +1,14 @@
 
 //this interacts with the Database.db file
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Controller {
     private static final String URL = "jdbc:sqlite:Database/Database.db";
@@ -33,7 +35,7 @@ public class Controller {
         String items = """
                 CREATE TABLE IF NOT EXISTS items(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
+                name TEXT NOT NULL UNIQUE,
                 price REAL NOT NULL,
                 stock INTEGER NOT NULL DEFAULT 0
                 )""";
@@ -96,69 +98,96 @@ public class Controller {
         }
     }
 
-    public static boolean login(String unme, String pass)
-    {
+    public static boolean login(String unme, String pass) {
         String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
-        
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             ps.setString(2, pass);
-            
-            try(ResultSet rs = ps.executeQuery()){
+
+            try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
 
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    //gets a user's name
-    public static String getName(String unme)
-    {
+    // gets a user's name
+    public static String getName(String unme) {
         String sql = ("SELECT name FROM users WHERE username = ?");
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
-            try(ResultSet rs = ps.executeQuery())
-            {
+            try (ResultSet rs = ps.executeQuery()) {
                 return rs.getString("name");
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return "n/a";
         }
 
     }
 
-    //gets a user's address
-    public static String getAddress(String unme)
-    {
+    // gets a user's address
+    public static String getAddress(String unme) {
         String sql = ("SELECT address FROM users WHERE username = ?");
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
-            try(ResultSet rs = ps.executeQuery())
-            {
+            try (ResultSet rs = ps.executeQuery()) {
                 return rs.getString("address");
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return "n/a";
         }
 
     }
 
-    
+    public static void addItems() // adds the list of items to the db
+    {
+        try {
+            File textFile = new File("listOfItems.txt"); // get the list of items as a File
+
+            if (textFile.exists()) // checking the return value of the file instead of just assuming it exists
+            {                      // FIO02-J ^^^^^***********************************^^^^^
+
+                System.out.println("File exists");
+                Scanner scan = new Scanner(textFile);
+
+                scan.nextLine();
+                scan.nextLine(); // throw away the first two lines
+                while (scan.hasNextLine()) {
+                    String[] data = scan.nextLine().split(":");
+
+                    String sql = "INSERT INTO items (name, price, stock) VALUES (?,?,?)";
+
+                    try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+                        ps.setString(1, data[0]);
+                        ps.setString(2, data[1]);
+                        ps.setString(3, data[2]);
+                        ps.executeUpdate();
+
+                    } catch (SQLException e) {
+                        System.out.println("Couldn't add items to database " + e.getMessage());
+                        System.exit(1);
+                    }
+
+                }
+            }
+            else
+            {
+                System.out.println("Couldn't open list of items, exiting");
+                System.exit(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
 }
