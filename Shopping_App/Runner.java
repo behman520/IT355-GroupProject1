@@ -11,7 +11,7 @@ public class Runner {
         else
             System.out.println("\nHello " + name + ", what would you like to do?");
 
-         System.out.println(
+        System.out.println(
                 "(A) Browse item selection\n(B) View shopping cart\n(C) Preview current and past orders\n(D) View payment methods\n(E) Exit application");
         System.out.print("Enter selection: ");
     }
@@ -86,7 +86,7 @@ public class Runner {
             String name;
             String username;
             String address;
-            String password;
+            char[] password;
 
             System.out.print("Enter your first name or type 'n' to skip: "); // ask for a username
             name = scan.nextLine();
@@ -109,11 +109,17 @@ public class Runner {
             address = scan.nextLine();
 
             System.out.print("Enter an password: "); // ask for a username
-            password = scan.nextLine();
+            password = System.console().readPassword(); //reads a password and doesn't display the text to the console
 
+            String strPassword = "";
+
+            for(char c : password)
+            {
+                strPassword += c;
+            }
             User newUser = new User(name, username, address);
 
-            boolean userAdded = Controller.addUser(newUser, password);
+            boolean userAdded = Controller.addUser(newUser,strPassword);
 
             if (userAdded == false) // set the new user to null if the database couldn't add the user
             {
@@ -123,7 +129,7 @@ public class Runner {
             return newUser;
         } else { //log in the user
             String username;
-            String password;
+            char[] password;
 
             System.out.print("Enter your username: ");
 
@@ -131,9 +137,16 @@ public class Runner {
 
             System.out.print("Enter your password: ");
 
-            password = scan.nextLine();
+            password = System.console().readPassword(); //get the password but don't display it to the terminal
 
-            boolean userExists = Controller.login(username, password); //log in the user and see if their account exists
+            String strPassword = "";
+
+            for(char c : password)
+            {
+                strPassword += c;
+            }
+
+            boolean userExists = Controller.login(username, strPassword); //log in the user and see if their account exists
 
             User signedInUser; //the user account that is signed in
 
