@@ -6,8 +6,12 @@ public class Runner {
 
     // the main menu for the app
     public static void menu(String name) {
-        System.out.println("\nHello " + name + ", what would you like to do?");
-        System.out.println(
+        if(name.equals("n") || name.equals("\'n\'"))
+            System.out.println("\nHello, what would you like to do?");
+        else
+            System.out.println("\nHello " + name + ", what would you like to do?");
+
+         System.out.println(
                 "(A) Browse item selection\n(B) View shopping cart\n(C) Preview current and past orders\n(D) View payment methods\n(E) Exit application");
         System.out.print("Enter selection: ");
     }
@@ -20,7 +24,7 @@ public class Runner {
 
         while (signedInUser == null) // something went wrong during sign in
         {
-            System.out.println("Sign in/log in failed, please try again");
+            System.out.println("\nSign in/log in failed, please try again");
             signedInUser = userSignIn(); // sign the user in or have them create an account
         }
 
@@ -65,7 +69,7 @@ public class Runner {
     } //end of main
 
     public static User userSignIn() {
-        System.out.print("Welcome! Enter 'sign up' or 'log in' to continue: ");
+        System.out.print("\nWelcome! Enter 'sign up' or 'log in' to continue: ");
 
         String choice = scan.nextLine();
         choice = choice.toLowerCase();
@@ -84,7 +88,7 @@ public class Runner {
             String address;
             String password;
 
-            System.out.print("Enter your first name or press enter to skip: "); // ask for a username
+            System.out.print("Enter your first name or type 'n' to skip: "); // ask for a username
             name = scan.nextLine();
 
             System.out.print("Enter a username: "); // ask for a username
@@ -136,7 +140,7 @@ public class Runner {
             if(userExists)
             {
                 System.out.println("\nSigned in.");
-                signedInUser = new User(Controller.getName(username), username, "/* add address */");
+                signedInUser = new User(Controller.getName(username), username, Controller.getAddress(username));
             }
             else
                 signedInUser = null; //something went wrong with the sign in

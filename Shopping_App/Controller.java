@@ -138,4 +138,27 @@ public class Controller {
 
     }
 
+    //gets a user's address
+    public static String getAddress(String unme)
+    {
+        String sql = ("SELECT address FROM users WHERE username = ?");
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, unme);
+            try(ResultSet rs = ps.executeQuery())
+            {
+                return rs.getString("address");
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return "n/a";
+        }
+
+    }
+
+    
+
 }
