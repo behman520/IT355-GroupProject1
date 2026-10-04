@@ -95,4 +95,47 @@ public class Controller {
             return false;
         }
     }
+
+    public static boolean login(String unme, String pass)
+    {
+        String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
+        
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, unme);
+            ps.setString(2, pass);
+            
+            try(ResultSet rs = ps.executeQuery()){
+                return rs.next();
+            }
+
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //gets a user's name
+    public static String getName(String unme)
+    {
+        String sql = ("SELECT name FROM users WHERE username = ?");
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, unme);
+            try(ResultSet rs = ps.executeQuery())
+            {
+                return rs.getString("name");
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return "n/a";
+        }
+
+    }
+
 }

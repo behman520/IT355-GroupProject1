@@ -26,7 +26,7 @@ public class Runner {
 
         String input = ""; // choice user selects for the switch statement
 
-        menu(signedInUser.getName()); // prompt the user with the first menu
+        menu(Controller.getName(signedInUser.getUsername())); // prompt the user with the first menu
         input = scan.nextLine();
 
         while (!input.toUpperCase().equals("E")) // continue looping until the user wants to quit (Enters 'E')
@@ -62,7 +62,7 @@ public class Runner {
             menu(signedInUser.getName());
             input = scan.nextLine(); // get next thing to do
         }
-    }
+    } //end of main
 
     public static User userSignIn() {
         System.out.print("Welcome! Enter 'sign up' or 'log in' to continue: ");
@@ -117,9 +117,32 @@ public class Runner {
             }
 
             return newUser;
-        } else {
-            System.out.println("Hey i know you"); // deal with log in
-            return null;
+        } else { //log in the user
+            String username;
+            String password;
+
+            System.out.print("Enter your username: ");
+
+            username = scan.nextLine();
+
+            System.out.print("Enter your password: ");
+
+            password = scan.nextLine();
+
+            boolean userExists = Controller.login(username, password); //log in the user and see if their account exists
+
+            User signedInUser; //the user account that is signed in
+
+            if(userExists)
+            {
+                System.out.println("\nSigned in.");
+                signedInUser = new User(Controller.getName(username), username, "/* add address */");
+            }
+            else
+                signedInUser = null; //something went wrong with the sign in
+
+            return signedInUser;
+
         }
     }
 }
