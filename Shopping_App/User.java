@@ -1,7 +1,7 @@
 //this represents a basic user in the shopping app, with certain functions they are allowed to perform 
 //ignore the package error if its giving one
 
-public class User {
+public final class User {
     private String name; // the persons name (just first name, to keep more information private)
     private String username; // this is the users id. This is not shown to the user, but is used when pulling
                              // from the database
