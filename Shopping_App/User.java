@@ -2,6 +2,7 @@
 //ignore the package error if its giving one
 
 public final class User {
+    private ShoppingCart cart;
     private String name; // the persons name (just first name, to keep more information private)
     private String username; // this is the users id. This is not shown to the user, but is used when pulling
                              // from the database
@@ -11,6 +12,7 @@ public final class User {
         this.name = nme;
         this.username = uname;
         this.address = a;
+        this.cart = new ShoppingCart();
     }
 
     public String getName() {
@@ -31,5 +33,44 @@ public final class User {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public ShoppingCart getCart()
+    {
+        return this.cart;
+    }
+
+    public boolean addItemToShoppingCart(String itemName) //adds an item to the users shopping cart
+    {
+
+        double price = Controller.returnItemPrice(itemName);
+
+        boolean inListOfItems = Controller.checkIfItemIsInList(itemName);
+
+        if(inListOfItems == false)
+            return false;
+
+        Item newItem = new Item(itemName, price);
+
+        if(cart.containsItem(newItem.getName())) //if the item is already in the cart increment amount by 1
+        {
+            for(Item e : cart.getList())
+            {
+                if(e.getName().equals(itemName))
+                {
+                    e.incrementAmount();
+                    return true;
+                }
+            }
+
+            return true;
+        }
+        else { //if item is not already in the cart, set its amount to 1
+
+            cart.getList().add(newItem);
+            newItem.setAmount(1);
+        }
+        
+        return true;
     }
 }

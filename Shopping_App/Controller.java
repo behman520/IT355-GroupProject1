@@ -172,11 +172,11 @@ public class Controller {
                         ps.executeUpdate();
 
                     } catch (SQLException e) {
-                        System.out.println("Couldn't add items to database " + e.getMessage());
-                        System.exit(1);
+                      //should only go here when we try to insert the items int the db that already exist
                     }
-
                 }
+
+                scan.close();
             }
             else
             {
@@ -188,6 +188,69 @@ public class Controller {
             System.out.println(e.getMessage());
         }
 
+         
     }
+
+    public static void displayListOfItems()
+    {
+        String sql = "SELECT id, name, price, stock FROM items";
+
+ 
+        try(Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql))
+        {
+            System.out.println();
+            while(rs.next())
+            {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                double price = rs.getDouble("price");
+                int stock = rs.getInt("stock");
+
+                System.out.println(id + ": " + name + " - $" + price + " (" + stock + " in stock)");
+            }
+            System.out.println();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static double returnItemPrice(String itemName)
+    {
+        String sql = "SELECT price FROM items WHERE name = ?";
+
+         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, itemName);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.getDouble("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static boolean checkIfItemIsInList(String itemName)
+    {
+        String sql = "SELECT 1 FROM items WHERE name = ?";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1,itemName);
+
+            try(ResultSet rs = ps.executeQuery())
+            {
+                return rs.next();
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

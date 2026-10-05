@@ -13,7 +13,7 @@ public class Runner {
 
         System.out.println(
                 "(A) Browse item selection\n(B) View shopping cart\n(C) Preview current and past orders\n(D) View payment methods\n(E) Exit application");
-        System.out.print("Enter selection: ");
+        System.out.print("Enter choice: ");
     }
 
     public static void main(String[] args) {
@@ -47,7 +47,7 @@ public class Runner {
                 case "B":
                 case "b":
 
-                    //viewShoppingCart(signedInUser); //lets the user see whats in their shopping cart
+                    viewShoppingCart(signedInUser); //lets the user see whats in their shopping cart
 
                 break;
 
@@ -138,7 +138,7 @@ public class Runner {
 
             username = scan.nextLine();
 
-            System.out.print("Enter your password: ");
+            System.out.print("Enter your password (it will not display on screen): ");
 
             password = System.console().readPassword(); //get the password but don't display it to the terminal
 
@@ -167,6 +167,65 @@ public class Runner {
     }
  
     public static void browseItemSelection(User signedInUser){ //allows a signed in user to browse items and add to shopping cart
-        //Controller.displayListOfItems();
+        
+        String input = "";
+
+        System.out.println("\nBROWSE ITEM SELECTION ------------------");
+        System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(E) Go back");
+
+        System.out.print("Enter choice: ");
+
+        input = scan.nextLine();
+        input = input.toLowerCase();
+
+        while(!input.equals("e"))
+        {
+
+            switch(input)
+            {
+                case "a":
+                    Controller.displayListOfItems();
+                break;
+
+                case "b":
+
+                    String name = "";
+                    System.out.print("Enter the name of the item: ");
+
+                    name = scan.nextLine();
+
+                    boolean added = signedInUser.addItemToShoppingCart(name); //adds the item to the users shopping cart
+
+                    if(added)
+                        System.out.println("\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
+                    else
+                        System.out.println("\nCouldn't add item\n");
+                break;
+            }
+
+            System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(E) Go back");
+
+            System.out.print("Enter choice: ");
+
+            input = scan.nextLine();
+            
+        }
+        
+        
     }
+
+    public static void viewShoppingCart(User signedInUser)
+    {
+        System.out.println();
+
+        if(signedInUser.getCart().getList().size() == 0)
+        {
+            System.out.println("No items in your cart");
+        }
+        for(Item e : signedInUser.getCart().getList())
+        {
+            System.out.println(e.getName() + "-$" + e.getPrice() + " (" + e.getAmount() + " in cart)");
+        }
+    }
+
 }
