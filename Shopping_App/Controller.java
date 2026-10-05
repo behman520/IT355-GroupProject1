@@ -231,7 +231,7 @@ public class Controller {
             return -1;
         }
     }
-
+ 
     public static boolean checkIfItemIsInList(String itemName)
     {
         String sql = "SELECT 1 FROM items WHERE name = ?";

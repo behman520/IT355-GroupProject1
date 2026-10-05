@@ -170,6 +170,9 @@ public class Runner {
         
         String input = "";
 
+        System.out.println("\nItems for sale:");
+        Controller.displayListOfItems();
+
         System.out.println("\nBROWSE ITEM SELECTION ------------------");
         System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(E) Go back");
 
@@ -190,7 +193,7 @@ public class Runner {
                 case "b":
 
                     String name = "";
-                    System.out.print("Enter the name of the item: ");
+                    System.out.print("Enter the name of the item(letters are case sensitive): ");
 
                     name = scan.nextLine();
 
@@ -209,9 +212,7 @@ public class Runner {
 
             input = scan.nextLine();
             
-        }
-        
-        
+        }    
     }
 
     public static void viewShoppingCart(User signedInUser)
@@ -221,8 +222,10 @@ public class Runner {
         if(signedInUser.getCart().getList().size() == 0)
         {
             System.out.println("No items in your cart");
+            return;
         }
-        for(Item e : signedInUser.getCart().getList())
+        System.out.println("\nSHOPPING CART----------------");
+        for(Item e : signedInUser.getCart().getList()) //display all items in the cart
         {
             System.out.println(e.getName() + "-$" + e.getPrice() + " (" + e.getAmount() + " in cart)");
         }
