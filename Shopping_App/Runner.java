@@ -65,6 +65,8 @@ public class Runner {
                 break;
 
                 case "e":
+
+                viewPaymentMethods(signedInUser); //presents the cards the user has on file
                 
                 break;
             }
@@ -238,7 +240,7 @@ public class Runner {
     public static void checkoutUser(User signedInUser)
     {
         System.out.print("\nCHECKOUT ------------------");
-        System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back");
+        System.out.println("\n(A) Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back");
         System.out.print("Enter choice: ");
         String input = "";
 
@@ -273,13 +275,66 @@ public class Runner {
                     }
                     System.out.println("Subtotal: $" + subtotal);
 
-                    //ADD SHOPPING CART TO ORDERS TODOTODOTODOTODOTODO
+                    //check if user has a card on file
+                    boolean cardOnFile = Controller.hasCardOnFile(signedInUser.getUsername());
+                    if(cardOnFile) //if the user has a card on file allow them to choose which one they want to use
+                    {
+                        System.out.print("Which card would you like to use? Enter the last 4 digits:");
+                        String last4Digits = scan.nextLine();
+
+                    }
+                    else
+                        System.out.println("You have no cards on file. Go to \"View payment methods\" to add a card");
                 break;
             }
             //get next input
             System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back"); 
             System.out.print("Enter choice: ");
             input = scan.nextLine().toLowerCase();
+        }
+    }
+
+    public static void viewPaymentMethods(signedInUser) //shows the cards the user has on file and allows them to add a card
+    {
+        System.out.println("VIEW PAYMENT METHODS ------------------");
+
+        String input = "";
+
+        System.out.println("(A) Add payment method\n(X) Go back");
+
+        System.out.print("Enter choice: ");
+
+        input = scan.nextLine().toLowerCase();
+
+        while(!input.equals("x"))
+        {
+            if(input.equals("a"))
+            {
+                //get the card information
+                String card_holder = "";
+                String last_four = "";
+                String expiry = "";
+                System.out.print("Enter the card holder name: ");
+                card_holder = scan.nextLine();
+                System.out.print("Enter the the last 4 digits: ");
+                last_four = scan.nextLine();
+                System.out.print("Enter the expiration data: ");
+                expiry = scan.nextLine();
+
+                Card newCard = new Card(card_holder, Intger.parseInt(last_four), expiry);
+
+                Controller.addUserCard(newCard, signedInUser);
+
+
+
+            }
+
+            System.out.println("(A) Add payment method\n(X) Go back");
+
+            System.out.print("Enter choice: ");
+
+            input = scan.nextLine().toLowerCase();
+
         }
     }
 }

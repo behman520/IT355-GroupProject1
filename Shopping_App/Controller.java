@@ -14,8 +14,16 @@ public class Controller {
     private static final String URL = "jdbc:sqlite:Database/Database.db";
 
     private static Connection connect() throws SQLException {
-        new java.io.File("Database").mkdirs(); // creates the folder if missing
-        return DriverManager.getConnection(URL);
+        
+        new java.io.File("Database").mkdirs(); //make the database foler if it doesn't exist
+        
+        Connection conn = DriverManager.getConnection(URL);
+
+        try(Statement stmt = conn.createStatement())
+        {
+            stmt.execute("PRAGMA foreign_keys = ON");
+        }
+         return conn;
     }
 
     // runs during startup to make sure the tables exist (if not creating them)
@@ -50,10 +58,22 @@ public class Controller {
                 FOREIGN KEY (item_id) REFERENCES items(id)
                 )""";
 
+        String cards = """
+                CREATE TABLE IF NOT EXISTS cards (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                card_holder TEXT NOT NULL,
+                last_four TEXT NOT NULL,
+                expiry TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE 
+                )
+                """; //cards are deleted if a users account is deleted
+
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
             stmt.execute(users);
             stmt.execute(items);
             stmt.execute(orders);
+            stmt.execute(cards);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,7 +142,9 @@ public class Controller {
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.getString("name");
+                if(rs.next())
+                    return rs.getString("name");
+                return "n/a";
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -138,7 +160,9 @@ public class Controller {
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.getString("address");
+                if(rs.next())
+                    return rs.getString("address");
+                return "n/a";
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -149,15 +173,15 @@ public class Controller {
 
     public static void addItems() // adds the list of items to the db
     {
-        try {
-            File textFile = new File("listOfItems.txt"); // get the list of items as a File
+        File textFile = new File("listOfItems.txt"); // get the list of items as a File
 
+        try(Scanner scan = new Scanner(textFile)) {
+ 
             if (textFile.exists()) // checking the return value of the file instead of just assuming it exists
             {                      // FIO02-J ^^^^^***********************************^^^^^
 
                 System.out.println("File exists");
-                Scanner scan = new Scanner(textFile);
-
+ 
                 scan.nextLine();
                 scan.nextLine(); // throw away the first two lines
                 while (scan.hasNextLine()) {
@@ -167,8 +191,8 @@ public class Controller {
 
                     try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
                         ps.setString(1, data[0]);
-                        ps.setString(2, data[1]);
-                        ps.setString(3, data[2]);
+                        ps.setDouble(2, Double.parseDouble(data[1].trim()));
+                        ps.setInt(3, Integer.parseInt(data[2].trim()));
                         ps.executeUpdate();
 
                     } catch (SQLException e) {
@@ -224,7 +248,9 @@ public class Controller {
          try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, itemName);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.getDouble("price");
+                if(rs.next())
+                    return rs.getDouble("price");
+                return -1.0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -249,6 +275,41 @@ public class Controller {
         {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static boolean hasCardOnFile(String userName) //checks if a user has a card on file
+    {
+        String sql = """
+                SELECT 1 FROM cards 
+                JOIN users ON cards.user_id = users.id
+                WHERE users.username = ?""";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, userName);
+
+            try(ResultSet rs = ps.executeQuery())
+            {
+                return rs.next();
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean addCard(Card newCard, User signedInUser)
+    {
+        String sql = "INSERT INTO cards (user_id, card_holder, last_four, expiry) VALUES (?,?,?,?)";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setInt(1, );
+            ps.setString(2, newCard.getCard_holder());
+
         }
     }
 }
