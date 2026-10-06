@@ -12,7 +12,7 @@ public class Runner {
             System.out.println("\nHello " + name + ", what would you like to do?");
 
         System.out.println(
-                "(A) Browse item selection\n(B) View shopping cart\n(C) Checkout\n(D) Preview current and past orders\n(E) View payment methods\n(X) Exit application");
+                "(A) Browse item selection  (displays list of items, and allow you to add items to shopping cart)\n(B) View shopping cart  (view the items and amount in your shopping cart)\n(C) Checkout  (Confirm items in your shopping cart and orders them)\n(D) Preview current and past orders\n(E) View payment methods\n(X) Exit application");
         System.out.print("Enter choice: ");
     }
 
@@ -34,36 +34,39 @@ public class Runner {
         menu(Controller.getName(signedInUser.getUsername())); // prompt the user with the first menu
         input = scan.nextLine();
 
-        while (!input.toUpperCase().equals("X")) // continue looping until the user wants to quit (Enters 'X')
+        input = input.toLowerCase();
+
+        while (!input.equals("x")) // continue looping until the user wants to quit (Enters 'X')
         {
             switch (input) {
-                case "A":
                 case "a":
 
                     browseItemSelection(signedInUser); //allow the user to browse items on the site and add items to their shopping cart
 
                 break;
 
-                case "B":
                 case "b":
 
                     viewShoppingCart(signedInUser); //lets the user see whats in their shopping cart
 
                 break;
 
-                case "C":
                 case "c":
+                    viewShoppingCart(signedInUser); //first let the user see what is in their shopping cart
 
+                    //then let the user check out
+                    checkoutUser(signedInUser);
  
-                    break;
+                break;
 
-                case "D":
                 case "d":
 
  
-                    break;
+                break;
 
-                case 
+                case "e":
+                
+                break;
             }
 
             menu(signedInUser.getName());
@@ -221,14 +224,65 @@ public class Runner {
 
         if(signedInUser.getCart().getList().size() == 0)
         {
+            System.out.println("SHOPPING CART----------------");
             System.out.println("No items in your cart");
             return;
         }
-        System.out.println("\nSHOPPING CART----------------");
+        System.out.println("SHOPPING CART----------------");
         for(Item e : signedInUser.getCart().getList()) //display all items in the cart
         {
-            System.out.println(e.getName() + "-$" + e.getPrice() + " (" + e.getAmount() + " in cart)");
+            System.out.println(e.getName() + " - $" + e.getPrice() + " each (" + e.getAmount() + " in cart)");
         }
     }
 
+    public static void checkoutUser(User signedInUser)
+    {
+        System.out.print("\nCHECKOUT ------------------");
+        System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back");
+        System.out.print("Enter choice: ");
+        String input = "";
+
+        input = scan.nextLine().toLowerCase();
+
+        while(!input.equals("x"))
+        {
+            switch(input)
+            {
+                case "a":
+                    System.out.print("Enter the item to remove (by name, case-sensitive): ");
+                    String remove = scan.nextLine();
+
+                    boolean wasItemRemoved = signedInUser.getCart().removeItem(remove);
+
+                    if(wasItemRemoved)
+                        System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
+                    else
+                        System.out.println("\nCouldn't remove " + remove + " from cart (maybe check spelling)");
+
+                    viewShoppingCart(signedInUser); //let the user see the new shopping cart
+                break;
+
+                case "b":
+                    System.out.println("\nAddress shipped to: " + signedInUser.getAddress());
+
+                    //get the subtotal of all items in the shopping cart
+                    double subtotal = 0.0;
+                    for(Item i : signedInUser.getCart().getList())
+                    {
+                        subtotal += i.getPrice() * i.getAmount(); //multiply by the amount of the item
+                    }
+                    System.out.println("Subtotal: $" + subtotal);
+
+
+                    //ADD SHOPPING CART TO ORDERS
+
+
+                break;
+            }
+            //get next input
+            System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back"); 
+            System.out.print("Enter choice: ");
+            input = scan.nextLine().toLowerCase();
+        }
+    }
 }
