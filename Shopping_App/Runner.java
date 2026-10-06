@@ -12,7 +12,7 @@ public class Runner {
             System.out.println("\nHello " + name + ", what would you like to do?");
 
         System.out.println(
-                "(A) Browse item selection\n(B) View shopping cart\n(C) Preview current and past orders\n(D) View payment methods\n(E) Exit application");
+                "(A) Browse item selection\n(B) View shopping cart\n(C) Checkout\n(D) Preview current and past orders\n(E) View payment methods\n(X) Exit application");
         System.out.print("Enter choice: ");
     }
 
@@ -34,7 +34,7 @@ public class Runner {
         menu(Controller.getName(signedInUser.getUsername())); // prompt the user with the first menu
         input = scan.nextLine();
 
-        while (!input.toUpperCase().equals("E")) // continue looping until the user wants to quit (Enters 'E')
+        while (!input.toUpperCase().equals("X")) // continue looping until the user wants to quit (Enters 'X')
         {
             switch (input) {
                 case "A":
@@ -54,16 +54,16 @@ public class Runner {
                 case "C":
                 case "c":
 
-                    // previewOrders(currentUser);
-
+ 
                     break;
 
                 case "D":
                 case "d":
 
-                    // viewPaymentMethods(currentUser);
-
+ 
                     break;
+
+                case 
             }
 
             menu(signedInUser.getName());
@@ -174,14 +174,14 @@ public class Runner {
         Controller.displayListOfItems();
 
         System.out.println("\nBROWSE ITEM SELECTION ------------------");
-        System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(E) Go back");
+        System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
 
         System.out.print("Enter choice: ");
 
         input = scan.nextLine();
         input = input.toLowerCase();
 
-        while(!input.equals("e"))
+        while(!input.equals("x"))
         {
 
             switch(input)
@@ -206,7 +206,7 @@ public class Runner {
                 break;
             }
 
-            System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(E) Go back");
+            System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
 
             System.out.print("Enter choice: ");
 
