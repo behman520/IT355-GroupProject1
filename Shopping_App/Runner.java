@@ -12,7 +12,7 @@ public class Runner {
             System.out.println("\nHello " + name + ", what would you like to do?");
 
         System.out.println(
-                "(A) Browse item selection  (displays list of items, and allow you to add items to shopping cart)\n(B) View shopping cart  (view the items and amount in your shopping cart)\n(C) Checkout  (Confirm items in your shopping cart and orders them)\n(D) Preview current and past orders\n(E) View payment methods\n(X) Exit application");
+                "(A) Browse item selection  (displays list of items, and allow you to add items to shopping cart)\n(B) View shopping cart  (view the items and amount in your shopping cart)\n(C) Checkout  (Confirm items in your shopping cart and orders them)\n(D) Preview current and past orders\n(E) View payment methods (see cards on file and add cards)\n(X) Exit application");
         System.out.print("Enter choice: ");
     }
 
@@ -273,11 +273,7 @@ public class Runner {
                     }
                     System.out.println("Subtotal: $" + subtotal);
 
-
-                    //ADD SHOPPING CART TO ORDERS
-                    
-
-
+                    //ADD SHOPPING CART TO ORDERS TODOTODOTODOTODOTODO
                 break;
             }
             //get next input
