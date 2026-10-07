@@ -1,5 +1,6 @@
 
 //this interacts with the Database.db file
+// all catch exceptions are logged using the logger instead of printing stack traces
 
 import java.io.File;
 import java.sql.Connection;
@@ -9,9 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controller {
     private static final String URL = "jdbc:sqlite:Database/Database.db";
+    private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
     private static Connection connect() throws SQLException {
 
@@ -74,7 +78,7 @@ public class Controller {
             stmt.execute(orders);
             stmt.execute(cards);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to initialize database tables.", e);
         }
     }
 
@@ -97,7 +101,7 @@ public class Controller {
             return true;
         } catch (SQLException e) // couldn't add user for some reason
         {
-            System.out.println("Could not add user: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error inserting new user into database.", e);
             return false;
         }
     }
@@ -112,7 +116,7 @@ public class Controller {
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error checking user existence.", e);
             return false;
         }
     }
@@ -129,7 +133,7 @@ public class Controller {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Authentication error during user login.", e);
             return false;
         }
     }
@@ -146,7 +150,7 @@ public class Controller {
                 return "n/a";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving user profile data.", e);
             return "n/a";
         }
 
@@ -164,7 +168,7 @@ public class Controller {
                 return "n/a";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving user profile data.", e);
             return "n/a";
         }
 
@@ -182,7 +186,7 @@ public class Controller {
                 return -1;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving user profile data.", e);
             return -1;
         }
 
@@ -215,6 +219,7 @@ public class Controller {
                     } catch (SQLException e) {
                         // should only go here when we try to insert the items int the db that already
                         // exist
+                        logger.log(Level.WARNING, "Item insertion skipped (likely duplicate item).", e);
                     }
                 }
 
@@ -225,7 +230,7 @@ public class Controller {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Failed to parse item file or execute transaction.", e);
         }
 
     }
@@ -247,7 +252,7 @@ public class Controller {
             }
             System.out.println();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error displaying list of items.", e);
         }
     }
 
@@ -262,7 +267,7 @@ public class Controller {
                 return -1.0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving item price.", e);
             return -1;
         }
     }
@@ -277,7 +282,7 @@ public class Controller {
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error checking if item is in list.", e);
             return false;
         }
     }
@@ -296,7 +301,7 @@ public class Controller {
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error checking if user has a card on file.", e);
             return false;
         }
     }
@@ -314,7 +319,7 @@ public class Controller {
             System.out.println("Sucessfully added card to account!");
             return true;
         } catch (SQLException e) {
-            System.out.println("Could not add card: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error adding user card.", e);
             return false; // could be that a userID doesn't exist
         }
     }
@@ -347,7 +352,7 @@ public class Controller {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error displaying user cards on file.", e);
         }
 
     }
@@ -371,7 +376,7 @@ public class Controller {
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving stock amount for item.", e);
             return -1;
         }
     }

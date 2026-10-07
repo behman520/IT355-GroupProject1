@@ -52,7 +52,7 @@ public final class User {
             boolean exists = Controller.userExists(username);
 
             while (exists) {
-                System.out.print("Please choose a different username: "); // ask for a username
+                System.out.print("Please choose a different username: "); // ask for a username ERR01-J: Do not allow exceptions to expose sensitive information. 
                 username = scan.nextLine();
 
                 // check if that username already exists
@@ -148,7 +148,7 @@ public final class User {
 
         if (inListOfItems == false) // if that item doesn't exist exit the function
         {
-            System.out.println("\nCouldn't find that item, check spelling.\n");
+            System.out.println("\nCouldn't find that item, check spelling.\n"); // ERR01-J: Do not allow exceptions to expose sensitive information. 
             return;
         }
 
@@ -216,7 +216,7 @@ public final class User {
         if (wasRemoved) // if the item was removed print out that it was, otherwise print that it wasn't
             System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
         else
-            System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)");
+            System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)"); // ERR01-J: Do not allow exceptions to expose sensitive information.
 
     }
 

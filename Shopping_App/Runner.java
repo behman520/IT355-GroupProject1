@@ -25,7 +25,7 @@ public class Runner {
 
         while (signedInUser == null) // something went wrong during sign in, reprompt them to log in
         {
-            System.out.println("\nSign in/log in failed, please try again");
+            System.out.println("\nSign in/log in failed, please try again"); // ERR01-J: Do not allow exceptions to expose sensitive information. 
             signedInUser = User.userSignIn(); // sign the user in or have them create an account
         }
 
