@@ -296,6 +296,56 @@ public final class User {
         }    
     }
 
+    public void checkOut()
+    {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("\nCHECKOUT ------------------");
+        System.out.println("\n(A) Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back");
+        System.out.print("Enter choice: ");
+        String input = "";
+
+        input = scan.nextLine().toLowerCase();
+
+        while(!input.equals("x"))
+        {
+            switch(input)
+            {
+                case "a":
+                    this.removeItemFromShoppingCart();
+                    this.viewShoppingCart(); //let the user see the new shopping cart
+                break;
+
+                case "b":
+                    System.out.println("\nAddress shipped to: " + this.getAddress());
+
+                    //get the subtotal of all items in the shopping cart
+                    double subtotal = 0.0;
+                    for(Item i : this.getCart().getList())
+                    {
+                        subtotal += i.getPrice() * i.getAmount(); //multiply by the amount of the item
+                    }
+                    System.out.println("Subtotal: $" + subtotal);
+
+                    //check if user has a card on file
+                    boolean cardOnFile = Controller.hasCardOnFile(this.getUsername());
+                    if(cardOnFile) //if the user has a card on file allow them to choose which one they want to use
+                    {
+                        System.out.print("Which card would you like to use? Enter the last 4 digits:");
+                        String last4Digits = scan.nextLine();
+
+                    }
+                    else
+                        System.out.println("You have no cards on file. Go to \"View payment methods\" to add a card");
+                break;
+            }
+            //get next input
+            System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back"); 
+            System.out.print("Enter choice: ");
+            input = scan.nextLine().toLowerCase();
+        }
+    }
+
     public int getID() {
         return this.userID;
     }
