@@ -3,6 +3,7 @@
 
 public final class User {
     private ShoppingCart cart;
+    private int userID; //the id assigned to the user 
     private String name; // the persons name (just first name, to keep more information private)
     private String username; // this is the users id. This is not shown to the user, but is used when pulling
                              // from the database
@@ -13,6 +14,16 @@ public final class User {
         this.username = uname;
         this.address = a;
         this.cart = new ShoppingCart();
+    }
+
+    public int getID()
+    {
+        return this.userID;
+    }
+
+    public void setID(int id)
+    {
+        this.userID = id;
     }
 
     public String getName() {

@@ -171,6 +171,24 @@ public class Controller {
 
     }
 
+    // gets a user's ID
+    public static int getUserID(String unme) {
+        String sql = ("SELECT id FROM users WHERE username = ?");
+
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, unme);
+            try (ResultSet rs = ps.executeQuery()) {
+                if(rs.next())
+                    return rs.getInt("id");
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+    }
+
     public static void addItems() // adds the list of items to the db
     {
         File textFile = new File("listOfItems.txt"); // get the list of items as a File
@@ -301,15 +319,63 @@ public class Controller {
         }
     }
 
-    public static boolean addCard(Card newCard, User signedInUser)
+    public static boolean addUserCard(Card newCard, User signedInUser)
     {
         String sql = "INSERT INTO cards (user_id, card_holder, last_four, expiry) VALUES (?,?,?,?)";
 
         try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
         {
-            ps.setInt(1, );
+            ps.setInt(1, Controller.getUserID(signedInUser.getUsername()));
             ps.setString(2, newCard.getCard_holder());
+            ps.setString(3, newCard.getLast_four());
+            ps.setString(4, newCard.getExpiry());
+            ps.executeUpdate();
 
+            System.out.println("Sucessfully added card to account!");
+            return true;
+        } catch(SQLException e)
+        {
+            System.out.println("Could not add card: " + e.getMessage());
+            return false; //could be that a userID doesn't exist
         }
     }
+
+    public static void displayUserCardsOnFile(String userName)
+    {
+        String sql = """
+                SELECT cards.id, cards.card_holder, cards.last_four, cards.expiry
+                FROM cards
+                JOIN users ON cards.user_id = users.id
+                WHERE users.username = ?""";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, userName);
+
+            try(ResultSet rs = ps.executeQuery())
+            {
+                boolean found = false;
+
+                while(rs.next())
+                {
+                    found = true;
+                    int id = rs.getInt("id");
+                    String holder = rs.getString("card_holder");
+                    String lastFour = rs.getString("last_four");
+                    String expiry = rs.getString("expiry");
+
+                    System.out.println(id + ": " + holder + " - card ending in " + lastFour + " (exp " + expiry + ")");
+                }
+
+                if(!found)
+                {
+                    System.out.println("No cards on file");
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
 }

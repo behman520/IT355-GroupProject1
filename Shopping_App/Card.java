@@ -1,11 +1,11 @@
 public class Card {
     
     private String card_holder;
-    private int last_four;
+    private String last_four;
     private String expiry;
 
     
-    Card(String ch, int lf, String e)
+    Card(String ch, String lf, String e)
     {
         this.card_holder = ch; 
         this.last_four = lf;
@@ -23,12 +23,12 @@ public class Card {
     }
 
 
-    public int getLast_four() {
+    public String getLast_four() {
         return last_four;
     }
 
 
-    public void setLast_four(int last_four) {
+    public void setLast_four(String last_four) {
         this.last_four = last_four;
     }
 

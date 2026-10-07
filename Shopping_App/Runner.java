@@ -133,6 +133,10 @@ public class Runner {
             {
                 newUser = null;
             }
+            else //get the user's id and set it
+            {
+                newUser.setID(Controller.getUserID(username));
+            }
 
             return newUser;
         } else { //log in the user
@@ -294,13 +298,13 @@ public class Runner {
         }
     }
 
-    public static void viewPaymentMethods(signedInUser) //shows the cards the user has on file and allows them to add a card
+    public static void viewPaymentMethods(User signedInUser) //shows the cards the user has on file and allows them to add a card
     {
         System.out.println("VIEW PAYMENT METHODS ------------------");
 
         String input = "";
 
-        System.out.println("(A) Add payment method\n(X) Go back");
+        System.out.println("(A) Add payment method\n(B) Display payment methods\n(X) Go back");
 
         System.out.print("Enter choice: ");
 
@@ -321,12 +325,16 @@ public class Runner {
                 System.out.print("Enter the expiration data: ");
                 expiry = scan.nextLine();
 
-                Card newCard = new Card(card_holder, Intger.parseInt(last_four), expiry);
+                Card newCard = new Card(card_holder, last_four, expiry);
 
-                Controller.addUserCard(newCard, signedInUser);
-
-
-
+                Controller.addUserCard(newCard, signedInUser); //add the card for the user
+            
+            
+            } else if (input.equals("b"))
+            {
+                System.out.println();
+                Controller.displayUserCardsOnFile(signedInUser.getUsername());
+                System.out.println();
             }
 
             System.out.println("(A) Add payment method\n(X) Go back");
