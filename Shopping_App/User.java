@@ -134,66 +134,50 @@ public final class User {
         }
     }
 
-    public int getID() {
-        return this.userID;
-    }
-
-    public void setID(int id) {
-        this.userID = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String n) {
-        this.name = n;
-    }
-
-    public String getAddress() {
-        return this.address;
-    }
-
-    public void setAddress(String a) {
-        this.address = a;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public ShoppingCart getCart() {
-        return this.cart;
-    }
-
     // adds an item to the users shopping cart
-    public boolean addItemToShoppingCart(String itemName) {
-        double price = Controller.returnItemPrice(itemName);
+    public void addItemToShoppingCart() {
+
+        Scanner scan = new Scanner(System.in);
+
+        String itemName = "";
+        System.out.print("Enter the name of the item(letters are case sensitive): ");
+
+        itemName = scan.nextLine();
 
         boolean inListOfItems = Controller.checkIfItemIsInList(itemName);
 
-        if (inListOfItems == false)
-            return false;
+        if (inListOfItems == false) // if that item doesn't exist
+        {
+            System.out.println("\nCouldn't add item\n");
+            return;
+        }
 
-        Item newItem = new Item(itemName, price);
+        double price = Controller.returnItemPrice(itemName); //get the price of the item
+
+        Item newItem = new Item(itemName, price); //create a new item
 
         if (cart.containsItem(newItem.getName())) // if the item is already in the cart increment amount by 1
         {
-            for (Item e : cart.getList()) {
+            for (Item e : this.getCart().getList()) {
                 if (e.getName().equals(itemName)) {
                     e.incrementAmount();
-                    return true;
+                    System.out.println(
+                            "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
                 }
             }
 
-            return true;
+            System.out.println(
+                    "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
+
         } else { // if item is not already in the cart, set its amount to 1
 
-            cart.getList().add(newItem);
+            this.getCart().getList().add(newItem);
             newItem.setAmount(1);
         }
 
-        return true;
+        System.out.println(
+                "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
+
     }
 
     public void removeItemFromShoppingCart() // remove the specified item from the shopping cart
@@ -222,7 +206,7 @@ public final class User {
             }
         }
 
-        if (wasRemoved) //if the item was removed print out that it was, otherwise print that it wasn't
+        if (wasRemoved) // if the item was removed print out that it was, otherwise print that it wasn't
             System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
         else
             System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)");
@@ -275,4 +259,72 @@ public final class User {
         }
     }
 
+    //allows a user to browse the items for sale
+    public void browseItemSelection(){ //allows a signed in user to browse items and add to shopping cart
+        Scanner scan = new Scanner(System.in);
+
+        String input = "";
+
+        System.out.println("\nItems for sale:");
+        Controller.displayListOfItems();
+
+        System.out.println("\nBROWSE ITEM SELECTION ------------------");
+        System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
+
+        System.out.print("Enter choice: ");
+
+        input = scan.nextLine();
+        input = input.toLowerCase();
+
+        while(!input.equals("x"))
+        {
+            switch(input)
+            {
+                case "a":
+                    Controller.displayListOfItems();
+                break;
+
+                case "b":
+                    this.addItemToShoppingCart(); //adds the item to the users shopping cart
+                break;
+            }
+
+            //reprompt the menu for browsing items
+            System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
+            System.out.print("Enter choice: ");
+            input = scan.nextLine();
+        }    
+    }
+
+    public int getID() {
+        return this.userID;
+    }
+
+    public void setID(int id) {
+        this.userID = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String n) {
+        this.name = n;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String a) {
+        this.address = a;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public ShoppingCart getCart() {
+        return this.cart;
+    }
 }

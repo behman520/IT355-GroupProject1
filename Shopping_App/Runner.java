@@ -40,15 +40,11 @@ public class Runner {
         {
             switch (input) {
                 case "a":
-
-                    browseItemSelection(signedInUser); //allow the user to browse items on the site and add items to their shopping cart
-
+                    signedInUser.browseItemSelection(); //allow the user to browse items on the site and add items to their shopping cart
                 break;
 
                 case "b":
-
                     signedInUser.viewShoppingCart();//lets the user see whats in their shopping cart
-                     
                 break;
 
                 case "c":
@@ -65,9 +61,7 @@ public class Runner {
                 break;
 
                 case "e":
-
-                signedInUser.viewPaymentMethods(); //presents the cards the user has on file
-                
+                    signedInUser.viewPaymentMethods(); //presents the cards the user has on file
                 break;
             }
 
@@ -76,54 +70,7 @@ public class Runner {
         }
     } //end of main
  
-    public static void browseItemSelection(User signedInUser){ //allows a signed in user to browse items and add to shopping cart
-        
-        String input = "";
-
-        System.out.println("\nItems for sale:");
-        Controller.displayListOfItems();
-
-        System.out.println("\nBROWSE ITEM SELECTION ------------------");
-        System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
-
-        System.out.print("Enter choice: ");
-
-        input = scan.nextLine();
-        input = input.toLowerCase();
-
-        while(!input.equals("x"))
-        {
-
-            switch(input)
-            {
-                case "a":
-                    Controller.displayListOfItems();
-                break;
-
-                case "b":
-
-                    String name = "";
-                    System.out.print("Enter the name of the item(letters are case sensitive): ");
-
-                    name = scan.nextLine();
-
-                    boolean added = signedInUser.addItemToShoppingCart(name); //adds the item to the users shopping cart
-
-                    if(added)
-                        System.out.println("\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
-                    else
-                        System.out.println("\nCouldn't add item\n");
-                break;
-            }
-
-            System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
-
-            System.out.print("Enter choice: ");
-
-            input = scan.nextLine();
-            
-        }    
-    }
+     
 
     public static void checkoutUser(User signedInUser)
     {
