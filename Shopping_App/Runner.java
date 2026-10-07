@@ -139,16 +139,7 @@ public class Runner {
             switch(input)
             {
                 case "a":
-                    System.out.print("Enter the item to remove (by name, case-sensitive): ");
-                    String remove = scan.nextLine();
-
-                    boolean wasItemRemoved = signedInUser.getCart().removeItem(remove);
-
-                    if(wasItemRemoved)
-                        System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
-                    else
-                        System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)");
-
+                    signedInUser.removeItemFromShoppingCart();
                     signedInUser.viewShoppingCart(); //let the user see the new shopping cart
                 break;
 
