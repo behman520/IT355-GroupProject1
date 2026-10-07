@@ -352,4 +352,28 @@ public class Controller {
 
     }
 
+    public static int getStockAmount(String itemName)
+    {
+        String sql = "SELECT stock FROM items WHERE name = ?";
+
+        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, itemName);
+
+            try(ResultSet rs = ps.executeQuery())
+            {
+                if(rs.next())
+                {
+                    return rs.getInt("stock");
+                }
+                return -1; //no item with that name
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 }

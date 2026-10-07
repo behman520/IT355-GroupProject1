@@ -140,19 +140,21 @@ public final class User {
         Scanner scan = new Scanner(System.in);
 
         String itemName = "";
-        System.out.print("Enter the name of the item(letters are case sensitive): ");
+        System.out.print("Enter the name of the item (letters are case sensitive): ");
 
         itemName = scan.nextLine();
 
         boolean inListOfItems = Controller.checkIfItemIsInList(itemName);
 
-        if (inListOfItems == false) // if that item doesn't exist
+        if (inListOfItems == false) // if that item doesn't exist exit the function
         {
-            System.out.println("\nCouldn't add item\n");
+            System.out.println("\nCouldn't find that item, check spelling.\n");
             return;
         }
 
         double price = Controller.returnItemPrice(itemName); // get the price of the item
+
+        Integer amountInDB = Controller.getStockAmount(itemName); //gets the stock amount of the item in the db
 
         Item newItem = new Item(itemName, price); // create a new item
 
