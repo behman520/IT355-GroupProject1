@@ -263,7 +263,7 @@ public class Runner {
                     if(wasItemRemoved)
                         System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
                     else
-                        System.out.println("\nCouldn't remove " + remove + " from cart (maybe check spelling)");
+                        System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)");
 
                     viewShoppingCart(signedInUser); //let the user see the new shopping cart
                 break;
