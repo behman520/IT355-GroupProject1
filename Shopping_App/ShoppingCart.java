@@ -10,16 +10,17 @@ public class ShoppingCart {
         this.cartList = new ArrayList<>();
     }
 
-    // OLDER METHODS
-
-    public boolean containsItem(String name) {
-        for (Item e : cartList) {
-            if (e.getName().equals(name)) {
-                return true;
+    //finds and returns an item in the shopping cart
+    public Item findItem(String name)
+    {
+        for(Item e : cartList)
+        {
+            if(e.getName().equals(name))
+            {
+                return e;
             }
         }
-
-        return false;
+        return null;
     }
 
     public ArrayList<Item> getList() {

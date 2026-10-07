@@ -154,32 +154,37 @@ public final class User {
 
         double price = Controller.returnItemPrice(itemName); // get the price of the item
 
-        Integer amountInDB = Controller.getStockAmount(itemName); //gets the stock amount of the item in the db
+        Integer amountInDB = Controller.getStockAmount(itemName); // gets the stock amount of the item in the db
 
-        Item newItem = new Item(itemName, price); // create a new item
+        System.out.println("amount in db: " + amountInDB);
 
-        if (cart.containsItem(newItem.getName())) // if the item is already in the cart increment amount by 1
+        Item existing = cart.findItem(itemName);
+
+ 
+        if (existing != null) // if the item is already in the cart increment amount in cart by 1
         {
-            for (Item e : this.getCart().getList()) {
-                if (e.getName().equals(itemName)) {
-                    e.incrementAmount();
-                    System.out.println(
-                            "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
-                }
+
+            Integer existingAmount = existing.getAmount(); //get the amount that this item has in the shopping cart
+
+            if(existingAmount.equals(amountInDB))  //EXP03-J using .equals() instead of ==
+            {
+                System.out.println("\nReached stock limit of " + itemName + "\n");
+                return;
             }
 
+            existing.incrementAmount();
+            
             System.out.println(
                     "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
 
         } else { // if item is not already in the cart, set its amount to 1
 
+            Item newItem = new Item(itemName, price); // create a new item
             this.getCart().getList().add(newItem);
             newItem.setAmount(1);
+            System.out.println(
+                    "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
         }
-
-        System.out.println(
-                "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
-
     }
 
     public void removeItemFromShoppingCart() // remove the specified item from the shopping cart
