@@ -19,6 +19,7 @@ public final class User {
     }
 
     // allows a user to sign into their account or sign up for an account
+    //returns the signed in User at the end
     public static User userSignIn() {
         Scanner scan = new Scanner(System.in); // scanner to read information from the user
 
@@ -76,12 +77,13 @@ public final class User {
             if (userAdded == false) // set the new user to null if the database couldn't add the user
             {
                 newUser = null;
-            } else // get the user's id and set it
+            } else // get the user's id and set it because we know the user was added if we get to the else
             {
                 newUser.setID(Controller.getUserID(username));
             }
 
             return newUser;
+
         } else { // log in the user
             String username;
             char[] password;
@@ -108,10 +110,28 @@ public final class User {
             if (userExists) {
                 System.out.println("\nSigned in.");
                 signedInUser = new User(Controller.getName(username), username, Controller.getAddress(username));
+                signedInUser.setID(Controller.getUserID(username)); //set the user's id based on their username
             } else
                 signedInUser = null; // something went wrong with the sign in
 
             return signedInUser;
+        }
+    }
+
+    public void viewShoppingCart()
+    {
+        
+        System.out.println();
+        if(this.getCart().getList().size() == 0)
+        {
+            System.out.println("SHOPPING CART----------------");
+            System.out.println("No items in your cart");
+            return;
+        }
+        System.out.println("SHOPPING CART----------------");
+        for(Item e : this.getCart().getList()) //display all items in the cart
+        {
+            System.out.println(e.getName() + " - $" + e.getPrice() + " each (" + e.getAmount() + " in cart)");
         }
     }
 

@@ -11,6 +11,20 @@ public class ShoppingCart {
         this.cartList = new ArrayList<>();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+    //OLDER METHODS
+
     public boolean removeItem(String itemName) // remove the specified item from the shopping cart
     {
         boolean retValue = false;

@@ -21,7 +21,7 @@ public class Runner {
         Controller.createTables(); // create the database tables, if not already created
         Controller.addItems(); //creates the items in the Items table, if not already created
 
-        User signedInUser = User.userSignIn(); // sign the user in or have them create an account
+        User signedInUser = User.userSignIn(); // sign the user in or have them create an account. 
 
         while (signedInUser == null) // something went wrong during sign in, reprompt them to log in
         {
@@ -47,12 +47,12 @@ public class Runner {
 
                 case "b":
 
-                    viewShoppingCart(signedInUser); //lets the user see whats in their shopping cart
-
+                    signedInUser.viewShoppingCart();//lets the user see whats in their shopping cart
+                     
                 break;
 
                 case "c":
-                    viewShoppingCart(signedInUser); //first let the user see what is in their shopping cart
+                    signedInUser.viewShoppingCart(); //first let the user see what is in their shopping cart
 
                     //then let the user check out
                     checkoutUser(signedInUser);
@@ -125,23 +125,6 @@ public class Runner {
         }    
     }
 
-    public static void viewShoppingCart(User signedInUser)
-    {
-        System.out.println();
-
-        if(signedInUser.getCart().getList().size() == 0)
-        {
-            System.out.println("SHOPPING CART----------------");
-            System.out.println("No items in your cart");
-            return;
-        }
-        System.out.println("SHOPPING CART----------------");
-        for(Item e : signedInUser.getCart().getList()) //display all items in the cart
-        {
-            System.out.println(e.getName() + " - $" + e.getPrice() + " each (" + e.getAmount() + " in cart)");
-        }
-    }
-
     public static void checkoutUser(User signedInUser)
     {
         System.out.print("\nCHECKOUT ------------------");
@@ -166,7 +149,7 @@ public class Runner {
                     else
                         System.out.println("\nCouldn't remove \"" + remove + "\" from cart (maybe check spelling)");
 
-                    viewShoppingCart(signedInUser); //let the user see the new shopping cart
+                    signedInUser.viewShoppingCart(); //let the user see the new shopping cart
                 break;
 
                 case "b":
