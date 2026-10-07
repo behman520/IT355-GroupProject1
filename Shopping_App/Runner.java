@@ -66,7 +66,7 @@ public class Runner {
 
                 case "e":
 
-                viewPaymentMethods(signedInUser); //presents the cards the user has on file
+                signedInUser.viewPaymentMethods(); //presents the cards the user has on file
                 
                 break;
             }
@@ -179,54 +179,6 @@ public class Runner {
             System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back"); 
             System.out.print("Enter choice: ");
             input = scan.nextLine().toLowerCase();
-        }
-    }
-
-    public static void viewPaymentMethods(User signedInUser) //shows the cards the user has on file and allows them to add a card
-    {
-        System.out.println("VIEW PAYMENT METHODS ------------------");
-
-        String input = "";
-
-        System.out.println("(A) Add payment method\n(B) Display payment methods\n(X) Go back");
-
-        System.out.print("Enter choice: ");
-
-        input = scan.nextLine().toLowerCase();
-
-        while(!input.equals("x"))
-        {
-            if(input.equals("a"))
-            {
-                //get the card information
-                String card_holder = "";
-                String last_four = "";
-                String expiry = "";
-                System.out.print("Enter the card holder name: ");
-                card_holder = scan.nextLine();
-                System.out.print("Enter the the last 4 digits: ");
-                last_four = scan.nextLine();
-                System.out.print("Enter the expiration data: ");
-                expiry = scan.nextLine();
-
-                Card newCard = new Card(card_holder, last_four, expiry);
-
-                Controller.addUserCard(newCard, signedInUser); //add the card for the user
-            
-            
-            } else if (input.equals("b"))
-            {
-                System.out.println();
-                Controller.displayUserCardsOnFile(signedInUser.getUsername());
-                System.out.println();
-            }
-
-            System.out.println("(A) Add payment method\n(X) Go back");
-
-            System.out.print("Enter choice: ");
-
-            input = scan.nextLine().toLowerCase();
-
         }
     }
 }
