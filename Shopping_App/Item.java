@@ -2,7 +2,7 @@
 
 public class Item {
     private String name; // the name of the item
-    private double price; //price of item
+    private double price; // price of item
     private int amount; // number of items a person is buying of this item (might need to be moved to
                         // another class)
 
@@ -26,19 +26,15 @@ public class Item {
         return this.name;
     }
 
-    public double getPrice()
-    {
+    public double getPrice() {
         return this.price;
     }
-
-    
 
     public int getAmount() {
         return this.amount;
     }
 
-    public void setAmount(int a)
-    {
+    public void setAmount(int a) {
         this.amount = a;
     }
 

@@ -152,9 +152,9 @@ public final class User {
             return;
         }
 
-        double price = Controller.returnItemPrice(itemName); //get the price of the item
+        double price = Controller.returnItemPrice(itemName); // get the price of the item
 
-        Item newItem = new Item(itemName, price); //create a new item
+        Item newItem = new Item(itemName, price); // create a new item
 
         if (cart.containsItem(newItem.getName())) // if the item is already in the cart increment amount by 1
         {
@@ -259,8 +259,8 @@ public final class User {
         }
     }
 
-    //allows a user to browse the items for sale
-    public void browseItemSelection(){ //allows a signed in user to browse items and add to shopping cart
+    // allows a user to browse the items for sale
+    public void browseItemSelection() { // allows a signed in user to browse items and add to shopping cart
         Scanner scan = new Scanner(System.in);
 
         String input = "";
@@ -276,28 +276,25 @@ public final class User {
         input = scan.nextLine();
         input = input.toLowerCase();
 
-        while(!input.equals("x"))
-        {
-            switch(input)
-            {
+        while (!input.equals("x")) {
+            switch (input) {
                 case "a":
                     Controller.displayListOfItems();
-                break;
+                    break;
 
                 case "b":
-                    this.addItemToShoppingCart(); //adds the item to the users shopping cart
-                break;
+                    this.addItemToShoppingCart(); // adds the item to the users shopping cart
+                    break;
             }
 
-            //reprompt the menu for browsing items
+            // reprompt the menu for browsing items
             System.out.println("(A) Display list of items\n(B) Add item to shopping cart\n(X) Go back");
             System.out.print("Enter choice: ");
             input = scan.nextLine();
-        }    
+        }
     }
 
-    public void checkOut()
-    {
+    public void checkOut() {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("\nCHECKOUT ------------------");
@@ -307,40 +304,37 @@ public final class User {
 
         input = scan.nextLine().toLowerCase();
 
-        while(!input.equals("x"))
-        {
-            switch(input)
-            {
+        while (!input.equals("x")) {
+            switch (input) {
                 case "a":
                     this.removeItemFromShoppingCart();
-                    this.viewShoppingCart(); //let the user see the new shopping cart
-                break;
+                    this.viewShoppingCart(); // let the user see the new shopping cart
+                    break;
 
                 case "b":
                     System.out.println("\nAddress shipped to: " + this.getAddress());
 
-                    //get the subtotal of all items in the shopping cart
+                    // get the subtotal of all items in the shopping cart
                     double subtotal = 0.0;
-                    for(Item i : this.getCart().getList())
-                    {
-                        subtotal += i.getPrice() * i.getAmount(); //multiply by the amount of the item
+                    for (Item i : this.getCart().getList()) {
+                        subtotal += i.getPrice() * i.getAmount(); // multiply by the amount of the item
                     }
                     System.out.println("Subtotal: $" + subtotal);
 
-                    //check if user has a card on file
+                    // check if user has a card on file
                     boolean cardOnFile = Controller.hasCardOnFile(this.getUsername());
-                    if(cardOnFile) //if the user has a card on file allow them to choose which one they want to use
+                    if (cardOnFile) // if the user has a card on file allow them to choose which one they want to
+                                    // use
                     {
                         System.out.print("Which card would you like to use? Enter the last 4 digits:");
                         String last4Digits = scan.nextLine();
 
-                    }
-                    else
+                    } else
                         System.out.println("You have no cards on file. Go to \"View payment methods\" to add a card");
-                break;
+                    break;
             }
-            //get next input
-            System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back"); 
+            // get next input
+            System.out.println("\n(A)Decrease count of item in cart\n(B) Pay and finish order\n(X) Go back");
             System.out.print("Enter choice: ");
             input = scan.nextLine().toLowerCase();
         }

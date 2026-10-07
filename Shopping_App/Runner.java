@@ -6,7 +6,7 @@ public class Runner {
 
     // the main menu for the app
     public static void menu(String name) {
-        if(name.equals("n") || name.equals("\'n\'"))
+        if (name.equals("n") || name.equals("\'n\'"))
             System.out.println("\nHello, what would you like to do?");
         else
             System.out.println("\nHello " + name + ", what would you like to do?");
@@ -19,9 +19,9 @@ public class Runner {
     public static void main(String[] args) {
 
         Controller.createTables(); // create the database tables, if not already created
-        Controller.addItems(); //creates the items in the Items table, if not already created
+        Controller.addItems(); // creates the items in the Items table, if not already created
 
-        User signedInUser = User.userSignIn(); // sign the user in or have them create an account. 
+        User signedInUser = User.userSignIn(); // sign the user in or have them create an account.
 
         while (signedInUser == null) // something went wrong during sign in, reprompt them to log in
         {
@@ -39,33 +39,35 @@ public class Runner {
         while (!input.equals("x")) // continue looping until the user wants to quit (Enters 'X')
         {
             switch (input) {
-                case "a":
-                    signedInUser.browseItemSelection(); //allow the user to browse items on the site and add items to their shopping cart
-                break;
+                case "a": // (A) Browse item selection (displays list of items, and allow you to add items
+                          // to shopping cart)
+                    signedInUser.browseItemSelection(); // allow the user to browse items on the site and add items to
+                                                        // their shopping cart
+                    break;
 
-                case "b":
-                    signedInUser.viewShoppingCart();//lets the user see whats in their shopping cart
-                break;
+                case "b": // (B) View shopping cart (view the items and amount in your shopping cart)
+                    signedInUser.viewShoppingCart();// lets the user see whats in their shopping cart
+                    break;
 
-                case "c":
-                    signedInUser.viewShoppingCart(); //first let the user see what is in their shopping cart
+                case "c": // (C) Checkout (Confirm items in your shopping cart and orders them)
+                    signedInUser.viewShoppingCart(); // first let the user see what is in their shopping cart
 
-                    //then let the user check out
+                    // then let the user check out
                     signedInUser.checkOut();
- 
-                break;
 
-                case "d":
- 
-                break;
+                    break;
 
-                case "e":
-                    signedInUser.viewPaymentMethods(); //presents the cards the user has on file
-                break;
+                case "d": // (D) Preview current and past orders
+                    // NOTHING HERE YET
+                    break;
+
+                case "e": // (E) View payment methods (see cards on file and add cards)
+                    signedInUser.viewPaymentMethods(); // presents the cards the user has on file
+                    break;
             }
 
             menu(signedInUser.getName());
             input = scan.nextLine(); // get next thing to do
         }
-    } //end of main
+    } // end of main
 }

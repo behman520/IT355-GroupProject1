@@ -14,16 +14,15 @@ public class Controller {
     private static final String URL = "jdbc:sqlite:Database/Database.db";
 
     private static Connection connect() throws SQLException {
-        
-        new java.io.File("Database").mkdirs(); //make the database foler if it doesn't exist
-        
+
+        new java.io.File("Database").mkdirs(); // make the database foler if it doesn't exist
+
         Connection conn = DriverManager.getConnection(URL);
 
-        try(Statement stmt = conn.createStatement())
-        {
+        try (Statement stmt = conn.createStatement()) {
             stmt.execute("PRAGMA foreign_keys = ON");
         }
-         return conn;
+        return conn;
     }
 
     // runs during startup to make sure the tables exist (if not creating them)
@@ -65,9 +64,9 @@ public class Controller {
                 card_holder TEXT NOT NULL,
                 last_four TEXT NOT NULL,
                 expiry TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE 
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                 )
-                """; //cards are deleted if a users account is deleted
+                """; // cards are deleted if a users account is deleted
 
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
             stmt.execute(users);
@@ -142,7 +141,7 @@ public class Controller {
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             try (ResultSet rs = ps.executeQuery()) {
-                if(rs.next())
+                if (rs.next())
                     return rs.getString("name");
                 return "n/a";
             }
@@ -160,7 +159,7 @@ public class Controller {
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             try (ResultSet rs = ps.executeQuery()) {
-                if(rs.next())
+                if (rs.next())
                     return rs.getString("address");
                 return "n/a";
             }
@@ -178,7 +177,7 @@ public class Controller {
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, unme);
             try (ResultSet rs = ps.executeQuery()) {
-                if(rs.next())
+                if (rs.next())
                     return rs.getInt("id");
                 return -1;
             }
@@ -193,13 +192,13 @@ public class Controller {
     {
         File textFile = new File("listOfItems.txt"); // get the list of items as a File
 
-        try(Scanner scan = new Scanner(textFile)) {
- 
+        try (Scanner scan = new Scanner(textFile)) {
+
             if (textFile.exists()) // checking the return value of the file instead of just assuming it exists
-            {                      // FIO02-J ^^^^^***********************************^^^^^
+            { // FIO02-J ^^^^^***********************************^^^^^
 
                 System.out.println("File exists");
- 
+
                 scan.nextLine();
                 scan.nextLine(); // throw away the first two lines
                 while (scan.hasNextLine()) {
@@ -214,14 +213,13 @@ public class Controller {
                         ps.executeUpdate();
 
                     } catch (SQLException e) {
-                      //should only go here when we try to insert the items int the db that already exist
+                        // should only go here when we try to insert the items int the db that already
+                        // exist
                     }
                 }
 
                 scan.close();
-            }
-            else
-            {
+            } else {
                 System.out.println("Couldn't open list of items, exiting");
                 System.exit(1);
             }
@@ -230,19 +228,16 @@ public class Controller {
             System.out.println(e.getMessage());
         }
 
-         
     }
 
-    public static void displayListOfItems()
-    {
+    public static void displayListOfItems() {
         String sql = "SELECT id, name, price, stock FROM items";
 
- 
-        try(Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql))
-        {
+        try (Connection conn = connect();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             System.out.println();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
@@ -251,22 +246,18 @@ public class Controller {
                 System.out.println(id + ": " + name + " - $" + price + " (" + stock + " in stock)");
             }
             System.out.println();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
-    public static double returnItemPrice(String itemName)
-    {
+    public static double returnItemPrice(String itemName) {
         String sql = "SELECT price FROM items WHERE name = ?";
 
-         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, itemName);
             try (ResultSet rs = ps.executeQuery()) {
-                if(rs.next())
+                if (rs.next())
                     return rs.getDouble("price");
                 return -1.0;
             }
@@ -275,56 +266,45 @@ public class Controller {
             return -1;
         }
     }
- 
-    public static boolean checkIfItemIsInList(String itemName)
-    {
+
+    public static boolean checkIfItemIsInList(String itemName) {
         String sql = "SELECT 1 FROM items WHERE name = ?";
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
-            ps.setString(1,itemName);
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, itemName);
 
-            try(ResultSet rs = ps.executeQuery())
-            {
+            try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean hasCardOnFile(String userName) //checks if a user has a card on file
+    public static boolean hasCardOnFile(String userName) // checks if a user has a card on file
     {
         String sql = """
-                SELECT 1 FROM cards 
+                SELECT 1 FROM cards
                 JOIN users ON cards.user_id = users.id
                 WHERE users.username = ?""";
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userName);
 
-            try(ResultSet rs = ps.executeQuery())
-            {
+            try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean addUserCard(Card newCard, User signedInUser)
-    {
+    public static boolean addUserCard(Card newCard, User signedInUser) {
         String sql = "INSERT INTO cards (user_id, card_holder, last_four, expiry) VALUES (?,?,?,?)";
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, Controller.getUserID(signedInUser.getUsername()));
             ps.setString(2, newCard.getCard_holder());
             ps.setString(3, newCard.getLast_four());
@@ -333,31 +313,26 @@ public class Controller {
 
             System.out.println("Sucessfully added card to account!");
             return true;
-        } catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.out.println("Could not add card: " + e.getMessage());
-            return false; //could be that a userID doesn't exist
+            return false; // could be that a userID doesn't exist
         }
     }
 
-    public static void displayUserCardsOnFile(String userName)
-    {
+    public static void displayUserCardsOnFile(String userName) {
         String sql = """
                 SELECT cards.id, cards.card_holder, cards.last_four, cards.expiry
                 FROM cards
                 JOIN users ON cards.user_id = users.id
                 WHERE users.username = ?""";
 
-        try(Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql))
-        {
+        try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userName);
 
-            try(ResultSet rs = ps.executeQuery())
-            {
+            try (ResultSet rs = ps.executeQuery()) {
                 boolean found = false;
 
-                while(rs.next())
-                {
+                while (rs.next()) {
                     found = true;
                     int id = rs.getInt("id");
                     String holder = rs.getString("card_holder");
@@ -367,12 +342,11 @@ public class Controller {
                     System.out.println(id + ": " + holder + " - card ending in " + lastFour + " (exp " + expiry + ")");
                 }
 
-                if(!found)
-                {
+                if (!found) {
                     System.out.println("No cards on file");
                 }
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

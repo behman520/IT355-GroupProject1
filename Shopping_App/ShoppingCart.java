@@ -6,19 +6,15 @@ public class ShoppingCart {
 
     private ArrayList<Item> cartList; // list of Items
 
-    ShoppingCart()
-    {
+    ShoppingCart() {
         this.cartList = new ArrayList<>();
     }
 
-    //OLDER METHODS
+    // OLDER METHODS
 
-    public boolean containsItem(String name)
-    {
-        for(Item e : cartList)
-        {
-            if(e.getName().equals(name))
-            {
+    public boolean containsItem(String name) {
+        for (Item e : cartList) {
+            if (e.getName().equals(name)) {
                 return true;
             }
         }
@@ -26,8 +22,7 @@ public class ShoppingCart {
         return false;
     }
 
-    public ArrayList<Item> getList()
-    {
+    public ArrayList<Item> getList() {
         return this.cartList;
     }
 
