@@ -1,8 +1,9 @@
-
 //this interacts with the Database.db file
 // all catch exceptions are logged using the logger instead of printing stack traces
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -198,8 +199,8 @@ public class Controller {
 
         try (Scanner scan = new Scanner(textFile)) {
 
-            if (textFile.exists()) // checking the return value of the file instead of just assuming it exists
-            { // FIO02-J ^^^^^***********************************^^^^^
+            if (textFile.canRead()) // checking the return value of the file instead of just assuming it exists
+            { // FIO02-J ^^^^^^^^^^^^^^^^^^ Checking to make sure that we can read from the file
 
                 System.out.println("File exists");
 
@@ -224,13 +225,19 @@ public class Controller {
                 }
 
                 scan.close();
-            } else {
-                System.out.println("Couldn't open list of items, exiting");
-                System.exit(1);
             }
-
-        } catch (Exception e) {
+            else
+            {
+                System.exit(1);        
+            } 
+        } catch (NoSuchFileException e) { //FIO02-J Instead of doing File.exists(), using an exception to exit from the code safely
             logger.log(Level.SEVERE, "Failed to parse item file or execute transaction.", e);
+            System.exit(1);
+
+        }
+        catch(IOException e)
+        {
+            logger.log(Level.SEVERE, "Failed to parse item file or execute transaction.", e); 
         }
 
     }
