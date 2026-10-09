@@ -340,4 +340,17 @@ public final class User {
         return this.username;
     }
 
+    public List<Item> getCartItems() {
+        return cart.getList();
+    }
+
+    public void restoreCartItem(String name, double price, int amount) {
+        if (name == null || name.isBlank() || Double.isNaN(price) || price < 0 || amount < 0) {
+            throw new IllegalArgumentException("invalid cart item");
+        }
+            for (int i = 0; i < amount; i++) {
+                cart.addOne(name, price);
+            }
+        }
+
 }
