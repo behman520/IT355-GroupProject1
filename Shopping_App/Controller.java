@@ -1,10 +1,15 @@
 //this interacts with the Database.db file
 // all catch exceptions are logged using the logger instead of printing stack traces
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -194,46 +199,52 @@ public class Controller {
 
     }
 
-    public static void addItems() // adds the list of items to the db
-    {
- 
-        try {
-            File textFile = new File("listOfItems.txt"); // get the list of items as a File
-            Scanner scan = new Scanner(textFile);
 
-            if (textFile.canRead()) // checking the return value of the file instead of just assuming it exists
-            { // FIO02-J ^^^^^^^^^^^^^^^^^^ Checking to make sure that we can read from the file
+    public static void addItems() {
+    Path path = Paths.get("listOfItems.txt");
 
-                System.out.println("File exists");
-
-                scan.nextLine();
-                scan.nextLine(); // throw away the first two lines
-                while (scan.hasNextLine()) {
-                    String[] data = scan.nextLine().split(":");
-
-                    String sql = "INSERT INTO items (name, price, stock) VALUES (?,?,?)";
-
-                    try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
-                        ps.setString(1, data[0]);
-                        ps.setDouble(2, Double.parseDouble(data[1].trim()));
-                        ps.setInt(3, Integer.parseInt(data[2].trim()));
-                        ps.executeUpdate();
-
-                    } catch (SQLException e) {
-                        // should only go here when we try to insert the items int the db that already
-                        // exist
-                        logger.log(Level.WARNING, "Item insertion skipped (likely duplicate item).", e);
-                    }
-                }
-
-                scan.close();
-            }
-        } catch (FileNotFoundException e) { //FIO02-J Instead of doing File.exists(), using an exception to exit from the code safely
-            logger.log(Level.SEVERE, "Failed to parse item file or execute transaction.", e);
-            System.exit(1);
-
+    try {
+        // FIO51-J: identify the file by more than its name
+        BasicFileAttributes before = Files.readAttributes(path, BasicFileAttributes.class);
+        if (!before.isRegularFile() || !Files.isReadable(path)) {
+            logger.log(Level.SEVERE, "Item list is not a readable regular file.");
+            return;
         }
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) { // FIO02-J: auto-closes
+
+            // FIO51-J: make sure it's still the same file after opening
+            BasicFileAttributes after = Files.readAttributes(path, BasicFileAttributes.class);
+            if (before.fileKey() != null && !before.fileKey().equals(after.fileKey())) {
+                logger.log(Level.SEVERE, "Item list changed while opening.");
+                return;
+            }
+
+            reader.readLine();
+            reader.readLine(); // throw away the first two lines
+
+            String line;
+            while ((line = reader.readLine()) != null) { // FIO08-J: check for end of stream
+                String[] data = line.split(":");
+
+                String sql = "INSERT INTO items (name, price, stock) VALUES (?,?,?)";
+
+                try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, data[0]);
+                    ps.setDouble(2, Double.parseDouble(data[1].trim()));
+                    ps.setInt(3, Integer.parseInt(data[2].trim()));
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    logger.log(Level.WARNING, "Item insertion skipped (likely duplicate item).", e);
+                }
+            }
+        }
+    } catch (IOException e) { // FIO02-J: handle file errors instead of ignoring them
+        logger.log(Level.SEVERE, "Failed to read item file.", e);
+        System.exit(1);
     }
+}
+    
 
     public static void displayListOfItems() {
         String sql = "SELECT id, name, price, stock FROM items";
