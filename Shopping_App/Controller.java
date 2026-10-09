@@ -135,6 +135,9 @@ public final class Controller {
         String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
 
         try (Connection conn = connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            //IDS00-J: Prevent SQL injection
+            // This uses prepared statements with parameterized queries to avoid SQL injection vulnerabilities.
+            // Instead of concatenating user input directly into the SQL query, we use placeholders (?) and set the values using ps.setString().
             ps.setString(1, unme);
             ps.setString(2, pass);
 
