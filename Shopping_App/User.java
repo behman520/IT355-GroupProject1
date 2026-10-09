@@ -1,6 +1,7 @@
 //this represents a basic user in the shopping app, with certain functions they are allowed to perform 
 //ignore the package error if its giving one
 
+import java.util.List;
 import java.util.Scanner;
 
 public final class User {
