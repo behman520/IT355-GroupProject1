@@ -20,7 +20,10 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Controller {
+public final class Controller {
+
+    private Controller() { }
+
     private static final String URL = "jdbc:sqlite:Database/Database.db";
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 

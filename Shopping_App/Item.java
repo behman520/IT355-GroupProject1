@@ -12,6 +12,12 @@ public class Item {
         this.price = price;
     }
 
+    Item(Item other) {
+        this.name = other.name;
+        this.amount = other.amount;
+        this.price = other.price;
+    }
+
     public void incrementAmount() // increments the amount of an item being bought by one
     {
         this.amount++;

@@ -1,8 +1,10 @@
 import java.util.Scanner;
 
-public class Runner {
+public final class Runner {
 
-    static Scanner scan = new Scanner(System.in);
+    private Runner() { }
+
+    private static final Scanner scan = new Scanner(System.in);
 
     // the main menu for the app
     public static void menu(String name) {

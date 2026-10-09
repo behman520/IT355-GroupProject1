@@ -122,13 +122,13 @@ public final class User {
     public void viewShoppingCart() {
 
         System.out.println();
-        if (this.getCart().getList().size() == 0) {
+        if (cart.isEmpty()) { // if the cart is empty, let the user know{
             System.out.println("SHOPPING CART----------------");
             System.out.println("No items in your cart");
             return;
         }
         System.out.println("SHOPPING CART----------------");
-        for (Item e : this.getCart().getList()) // display all items in the cart
+        for (Item e : cart.getList()) // display all items in the cart
         {
             System.out.println(e.getName() + " - $" + e.getPrice() + " each (" + e.getAmount() + " in cart)");
         }
@@ -158,33 +158,18 @@ public final class User {
 
         System.out.println("amount in db: " + amountInDB);
 
-        Item existing = cart.findItem(itemName);
+        int inCart = cart.getAmountOf(itemName);
 
  
-        if (existing != null) // if the item is already in the cart increment amount in cart by 1
+         if (inCart >= amountInDB) // if the item is already in the cart increment amount in cart by 1
         {
-
-            Integer existingAmount = existing.getAmount(); //get the amount that this item has in the shopping cart
-
-            if(existingAmount.equals(amountInDB))  //EXP03-J using .equals() instead of ==
-            {
-                System.out.println("\nReached stock limit of " + itemName + "\n");
-                return;
-            }
-
-            existing.incrementAmount();
-            
-            System.out.println(
-                    "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
-
-        } else { // if item is not already in the cart, set its amount to 1
-
-            Item newItem = new Item(itemName, price); // create a new item
-            this.getCart().getList().add(newItem);
-            newItem.setAmount(1);
-            System.out.println(
-                    "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
+            System.out.println("\nReached stock limit of " + itemName + "\n");
+            return;
         }
+
+        cart.addOne(itemName, price);
+        System.out.println(
+                "\nItem added to shopping cart! Your cart will persist while keeping application open (add cart to orders to keep items persistent)\n");
     }
 
     public void removeItemFromShoppingCart() // remove the specified item from the shopping cart
@@ -194,24 +179,7 @@ public final class User {
         System.out.print("Enter the item to remove (by name, case-sensitive): ");
         String remove = scan.nextLine();
 
-        boolean wasRemoved = false; // determines whether the item was removed or not
-
-        for (Item inList : this.getCart().getList()) // loop for each item in the list
-        {
-            if (inList.getName().equals(remove)) // find the one that matches the id of the parameter item
-            {
-                if (inList.getAmount() > 1) // if there is more than one item, just decrement the amount
-                {
-                    inList.decrementAmount();
-                    wasRemoved = true;
-                } else // remove the item if its at one for amount
-                {
-                    this.getCart().getList().remove(inList);
-                    wasRemoved = true;
-                }
-                break;
-            }
-        }
+        boolean wasRemoved = cart.removeOne(remove); // determines whether the item was removed or not
 
         if (wasRemoved) // if the item was removed print out that it was, otherwise print that it wasn't
             System.out.println("\nSucessfully removed 1 \"" + remove + "\" from the cart");
@@ -322,10 +290,7 @@ public final class User {
                     System.out.println("\nAddress shipped to: " + this.getAddress());
 
                     // get the subtotal of all items in the shopping cart
-                    double subtotal = 0.0;
-                    for (Item i : this.getCart().getList()) {
-                        subtotal += i.getPrice() * i.getAmount(); // multiply by the amount of the item
-                    }
+                    double subtotal = cart.getSubtotal();
                     System.out.println("Subtotal: $" + subtotal);
 
                     // check if user has a card on file
@@ -375,7 +340,4 @@ public final class User {
         return this.username;
     }
 
-    public ShoppingCart getCart() {
-        return this.cart;
-    }
 }
