@@ -31,6 +31,8 @@ public final class Runner {
             signedInUser = User.userSignIn(); // sign the user in or have them create an account
         }
 
+        CartStorage.load(signedInUser);
+        
         String input = ""; // choice user selects for the switch statement
 
         menu(signedInUser.getName()); // prompt the user with the first menu
@@ -71,5 +73,6 @@ public final class Runner {
             menu(signedInUser.getName());
             input = scan.nextLine(); // get next thing to do
         }
+        CartStorage.save(signedInUser);
     } // end of main
 }
