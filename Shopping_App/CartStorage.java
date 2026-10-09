@@ -19,7 +19,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
  
+// OBJ11-J: the cart file is a serialized object, not a text file, so it cannot be edited by the user
 public final class CartStorage {
+    // OBJ10-J: all static fileds are private static final
     private static final Logger logger = Logger.getLogger(CartStorage.class.getName());
  
     // SER12-J: the ONLY classes allowed to be deserialized from a cart file
@@ -146,7 +148,7 @@ public final class CartStorage {
     private static SavedCart read(Path file) throws IOException {
         try (ObjectInputStream in = new WhitelistObjectInputStream(Files.newInputStream(file))) {
             Object obj = in.readObject();
-            if (!(obj instanceof SavedCart))
+            if (!(obj instanceof SavedCart)) //OBJ09-J: compares Classes, not class names
                 throw new InvalidObjectException("unexpected data");
             return (SavedCart) obj;
         } catch (ClassNotFoundException e) {
