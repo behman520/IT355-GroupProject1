@@ -1,3 +1,13 @@
+/**
+ * Demonstrates the difference between reference equality (==) and value
+ * equality (Integer.equals(Object)) when comparing Integer
+ * objects in Java.
+ * <p>
+ * When an int is autoboxed into an  Integer wrapper class, Java uses
+ * Integer.valueOf(int), which returns a cached object for values in the
+ * range -128 to 127. Values outside that range produce a new object each time,
+ * so == compares different references even when the numeric values match.
+ */
 public class Main2
 {
     public static void main(String[] args)

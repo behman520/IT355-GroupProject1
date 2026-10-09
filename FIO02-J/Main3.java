@@ -1,7 +1,4 @@
-/*this program uses the return value from the FILE class appropriately
-handing any errors opening files correctly
-It is implemented as a program that allows you to play songs, however,
-if a song is missing the program handles the exception*/
+ 
 
 import java.io.File;
 import java.util.Scanner;
@@ -12,7 +9,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
-
+/***
+ * this program uses the return value from the FILE class appropriately
+ * handing any errors opening files correctly
+ * It is implemented as a program that allows you to play songs, however,
+ * if a song is missing the program handles the exception*/
 public class Main3
 {
     static String SHAPE_OF_YOU = "Ed Sheeran Shape of You (Lyrics).wav";

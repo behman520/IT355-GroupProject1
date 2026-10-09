@@ -1,5 +1,15 @@
 package MET52J;
 
+
+/**
+ * 
+ * The program wraps a  Person in an  EvilClone and another in a
+ *  NormalCloneclones each wrapper, renames the person inside each
+ * clone, and then prints the names held by the originals and the clones. The
+ * output shows whether a clone shares the same Person object as its
+ * original or has its own independent copy.
+ * <p>
+ */
 public class Main {
     
     public static void main()

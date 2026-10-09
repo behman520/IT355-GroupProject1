@@ -1,5 +1,16 @@
 import java.util.Arrays;
 
+
+/**
+ * Demonstrates the difference between reference equality and content equality
+ * when comparing arrays in Java.
+ * <p>
+ * Arrays inherit the Object.equals method, which only checks whether two
+ * variables refer to the same array object. To compare the actual
+ * contents of two arrays, use Arrays.equals() method
+ * This class also shows how aliasing works: two variables can point to the same
+ * array, so changes made through one are visible through the other.
+ */
 public class Main1
 {
 
